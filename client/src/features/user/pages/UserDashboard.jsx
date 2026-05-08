@@ -1,11 +1,11 @@
 import React from "react";
 import { Button } from "@/components/ui/button";
 import { useDispatch } from "react-redux";
-import { useGetProfileQuery } from "@/features/auth/authApi";
-import { logout } from "@/features/auth/authSlice";
+import { useGetProfileQuery } from "@/features/auth/auth.api";
+import { logout } from "@/features/auth/auth.slice";
 import { useAuth } from "@/hooks/useAuth";
 
-const Dashboard = () => {
+const UserDashboard = () => {
   const { user, isAuthenticated } = useAuth();
   const dispatch = useDispatch();
   const { isLoading } = useGetProfileQuery();
@@ -17,7 +17,7 @@ const Dashboard = () => {
       <div className="w-full max-w-md rounded-xl border border-zinc-200 bg-white p-8 shadow-xl">
         <div className="mb-8 flex items-center justify-between">
           <h1 className="text-3xl font-bold tracking-tight text-zinc-900">
-            Dashboard
+            UserDashboard
           </h1>
           <span className="inline-flex items-center rounded-full border border-indigo-200 bg-indigo-50 px-2.5 py-0.5 text-xs font-semibold text-indigo-700">
             {user?.role || "User"}
@@ -65,4 +65,4 @@ const Dashboard = () => {
   );
 };
 
-export default Dashboard;
+export default UserDashboard;

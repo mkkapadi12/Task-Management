@@ -1,5 +1,5 @@
 import { baseApi } from "@/app/baseApi";
-import { setCredentials, setUser } from "./authSlice";
+import { setCredentials, setUser } from "./auth.slice";
 import { toast } from "sonner";
 
 export const authApi = baseApi.injectEndpoints({

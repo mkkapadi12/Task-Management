@@ -2,7 +2,7 @@ import React from "react";
 import { Link } from "react-router-dom";
 import { Button } from "@/components/ui/button";
 
-const Home = () => {
+const HomePage = () => {
   return (
     <div className="flex min-h-screen flex-col bg-zinc-50 text-zinc-900 font-sans">
       <header className="flex items-center justify-between border-b border-zinc-200 bg-white px-6 py-4 shadow-sm">
@@ -74,4 +74,4 @@ const Home = () => {
   );
 };
 
-export default Home;
+export default HomePage;
