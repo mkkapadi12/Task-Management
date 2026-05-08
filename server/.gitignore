@@ -1,0 +1,8 @@
+# Prisma generated client (rebuilt via prisma generate)
+generated/
+
+# Build output
+dist/
+
+# Upload temp folder if any
+uploads/
