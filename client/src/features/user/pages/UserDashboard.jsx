@@ -1,68 +1,171 @@
-import React from "react";
-import { Button } from "@/components/ui/button";
-import { useDispatch } from "react-redux";
-import { useGetProfileQuery } from "@/features/auth/auth.api";
-import { logout } from "@/features/auth/auth.slice";
+import { useMemo } from "react";
+import { Link } from "react-router-dom";
 import { useAuth } from "@/hooks/useAuth";
+import { useGetAllPostsQuery } from "@/features/post/post.api";
+import StatsCard from "@/features/dashboard/StatsCard";
+import { Button } from "@/components/ui/button";
+import {
+  FileText,
+  CheckCircle,
+  FilePen,
+  CalendarDays,
+  Eye,
+  Pencil,
+  Trash2,
+  Plus,
+  Inbox,
+} from "lucide-react";
+import { cn } from "@/lib/utils";
 
-const UserDashboard = () => {
-  const { user, isAuthenticated } = useAuth();
-  const dispatch = useDispatch();
-  const { isLoading } = useGetProfileQuery();
+const DashboardPage = () => {
+  const { user } = useAuth();
+  const { data, isLoading } = useGetAllPostsQuery({ page: 1 });
 
-  console.log(user);
+  const posts = data?.posts || [];
+
+  const stats = useMemo(() => {
+    const published = posts.filter((p) => p.status === "PUBLISHED").length;
+    const drafts = posts.filter((p) => p.status === "DRAFT").length;
+    const memberSince = user?.createdAt
+      ? new Date(user.createdAt).toLocaleDateString("en-US", {
+          month: "short",
+          year: "numeric",
+        })
+      : "—";
+
+    return { total: posts.length, published, drafts, memberSince };
+  }, [posts, user]);
 
   return (
-    <div className="flex min-h-screen w-full items-center justify-center bg-zinc-50 p-6 text-zinc-900">
-      <div className="w-full max-w-md rounded-xl border border-zinc-200 bg-white p-8 shadow-xl">
-        <div className="mb-8 flex items-center justify-between">
-          <h1 className="text-3xl font-bold tracking-tight text-zinc-900">
-            UserDashboard
-          </h1>
-          <span className="inline-flex items-center rounded-full border border-indigo-200 bg-indigo-50 px-2.5 py-0.5 text-xs font-semibold text-indigo-700">
-            {user?.role || "User"}
-          </span>
-        </div>
+    <div className="space-y-8 animate-in fade-in slide-in-from-bottom-4 duration-500">
+      {/* ── Welcome ── */}
+      <div>
+        <h2 className="text-2xl font-bold tracking-tight">
+          Welcome back, {user?.name?.split(" ")[0] || "User"} 👋
+        </h2>
+        <p className="text-muted-foreground mt-1">
+          Here's what's happening with your posts today.
+        </p>
+      </div>
 
-        <div className="mb-8 space-y-5">
-          <div className="flex flex-col space-y-1">
-            <span className="text-xs font-medium uppercase tracking-wider text-zinc-500">
-              Name
-            </span>
-            <span className="text-lg font-medium text-zinc-900">
-              {user?.name || "N/A"}
-            </span>
-          </div>
+      {/* ── Stats Row ── */}
+      <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4">
+        <StatsCard icon={FileText} label="Total Posts" value={stats.total} />
+        <StatsCard
+          icon={CheckCircle}
+          label="Published"
+          value={stats.published}
+        />
+        <StatsCard icon={FilePen} label="Drafts" value={stats.drafts} />
+        <StatsCard
+          icon={CalendarDays}
+          label="Member Since"
+          value={stats.memberSince}
+        />
+      </div>
 
-          <div className="flex flex-col space-y-1">
-            <span className="text-xs font-medium uppercase tracking-wider text-zinc-500">
-              Email Address
-            </span>
-            <span className="text-lg font-medium text-zinc-900">
-              {user?.email || "N/A"}
-            </span>
-          </div>
-
-          <div className="flex flex-col space-y-1">
-            <span className="text-xs font-medium uppercase tracking-wider text-zinc-500">
-              User ID
-            </span>
-            <span className="text-sm font-mono text-zinc-600">{user?.id}</span>
-          </div>
-        </div>
-
-        <div className="mt-8 pt-6 border-t border-zinc-100">
-          <Button
-            variant="destructive"
-            className="w-full"
-            onClick={() => dispatch(logout())}
-          >
-            Sign Out
+      {/* ── Recent Posts ── */}
+      <div className="rounded-xl border border-border/50 bg-card overflow-hidden">
+        <div className="flex items-center justify-between px-5 py-4 border-b border-border/50">
+          <h3 className="text-base font-semibold">Recent Posts</h3>
+          <Button asChild size="sm" className="rounded-lg">
+            <Link to="/posts">View All</Link>
           </Button>
         </div>
+
+        {isLoading ? (
+          <div className="p-8 text-center text-muted-foreground">
+            <div className="mx-auto h-8 w-8 animate-spin rounded-full border-2 border-primary border-t-transparent" />
+            <p className="mt-3 text-sm">Loading posts…</p>
+          </div>
+        ) : posts.length === 0 ? (
+          /* Empty state */
+          <div className="flex flex-col items-center justify-center py-16 px-6">
+            <div className="flex h-16 w-16 items-center justify-center rounded-2xl bg-muted mb-4">
+              <Inbox size={28} className="text-muted-foreground" />
+            </div>
+            <h4 className="text-base font-semibold mb-1">No posts yet</h4>
+            <p className="text-sm text-muted-foreground mb-4 text-center max-w-xs">
+              Create your first post to get started. Share your thoughts with
+              the world!
+            </p>
+            <Button asChild size="sm" className="rounded-lg">
+              <Link to="/posts">
+                <Plus size={16} className="mr-1.5" />
+                Create Post
+              </Link>
+            </Button>
+          </div>
+        ) : (
+          /* Posts table */
+          <div className="overflow-x-auto">
+            <table className="w-full text-sm">
+              <thead>
+                <tr className="border-b border-border/50 text-muted-foreground">
+                  <th className="text-left font-medium px-5 py-3">Title</th>
+                  <th className="text-left font-medium px-5 py-3">Status</th>
+                  <th className="text-left font-medium px-5 py-3 hidden sm:table-cell">
+                    Date
+                  </th>
+                  <th className="text-right font-medium px-5 py-3">Actions</th>
+                </tr>
+              </thead>
+              <tbody>
+                {posts.slice(0, 5).map((post) => (
+                  <tr
+                    key={post.id}
+                    className="border-b border-border/30 last:border-b-0 transition-colors hover:bg-muted/30"
+                  >
+                    <td className="px-5 py-3.5">
+                      <Link
+                        to={`/posts/${post.id}`}
+                        className="font-medium hover:text-primary transition-colors line-clamp-1"
+                      >
+                        {post.title}
+                      </Link>
+                    </td>
+                    <td className="px-5 py-3.5">
+                      <span
+                        className={cn(
+                          "inline-flex items-center rounded-full px-2.5 py-0.5 text-xs font-medium",
+                          post.status === "PUBLISHED"
+                            ? "bg-primary/15 text-primary"
+                            : "bg-warning/15 text-warning"
+                        )}
+                      >
+                        {post.status}
+                      </span>
+                    </td>
+                    <td className="px-5 py-3.5 text-muted-foreground hidden sm:table-cell">
+                      {new Date(post.createdAt).toLocaleDateString("en-US", {
+                        month: "short",
+                        day: "numeric",
+                        year: "numeric",
+                      })}
+                    </td>
+                    <td className="px-5 py-3.5">
+                      <div className="flex items-center justify-end gap-1">
+                        <Button
+                          asChild
+                          variant="ghost"
+                          size="icon-sm"
+                          className="rounded-lg"
+                        >
+                          <Link to={`/posts/${post.id}`}>
+                            <Eye size={15} />
+                          </Link>
+                        </Button>
+                      </div>
+                    </td>
+                  </tr>
+                ))}
+              </tbody>
+            </table>
+          </div>
+        )}
       </div>
     </div>
   );
 };
 
-export default UserDashboard;
+export default DashboardPage;

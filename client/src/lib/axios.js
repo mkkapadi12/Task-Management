@@ -8,10 +8,14 @@ const axiosInstance = axios.create({
 });
 
 // attach token to every request
+// and let axios auto-detect Content-Type for FormData (multipart boundary)
 axiosInstance.interceptors.request.use((config) => {
   const token = store.getState().auth.token;
   if (token) {
     config.headers.Authorization = `Bearer ${token}`;
+  }
+  if (config.data instanceof FormData) {
+    delete config.headers["Content-Type"];
   }
   return config;
 });

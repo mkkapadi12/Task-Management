@@ -1,6 +1,5 @@
 import { baseApi } from "@/app/baseApi";
 import { setCredentials, setUser } from "./auth.slice";
-import { toast } from "sonner";
 
 export const authApi = baseApi.injectEndpoints({
   endpoints: (builder) => ({
@@ -10,8 +9,8 @@ export const authApi = baseApi.injectEndpoints({
         try {
           const { data } = await queryFulfilled;
           dispatch(setCredentials(data.data));
-        } catch {
-          console.log("Registration failed");
+        } catch (error) {
+          console.log(error.error.message);
         }
       },
     }),
@@ -23,7 +22,7 @@ export const authApi = baseApi.injectEndpoints({
           const { data } = await queryFulfilled;
           dispatch(setCredentials(data.data));
         } catch (error) {
-          toast.error(error.error.message);
+          console.log(error.error.message);
         }
       },
     }),
@@ -40,7 +39,7 @@ export const authApi = baseApi.injectEndpoints({
           const { data } = await queryFulfilled;
           dispatch(setUser(data));
         } catch (error) {
-          toast.error(error.error.message);
+          console.log(error.error.message);
         }
       },
     }),

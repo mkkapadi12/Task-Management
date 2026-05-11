@@ -1,7 +1,9 @@
 import { createBrowserRouter, RouterProvider } from "react-router-dom";
 
 // Guest pages
-import HomePage from "@/features/guest/pages/HomePage";
+import Home from "@/features/guest/pages/Home";
+import About from "@/features/guest/pages/About";
+import Contact from "@/features/guest/pages/Contact";
 
 // Auth pages
 import LoginPage from "@/features/auth/LoginPage";
@@ -11,20 +13,31 @@ import RegisterPage from "@/features/auth/RegisterPage";
 import UserDashboard from "@/features/user/pages/UserDashboard";
 import ProfilePage from "@/features/user/pages/ProfilePage";
 
-// guards
+// Post pages
+import PostsPage from "@/features/post/pages/PostsPage";
+import PostDetailPage from "@/features/post/pages/PostDetailPage";
+
+// Guards
 import GuestRoute from "@/components/routes/GuestRoute";
 import ProtectedRoute from "@/components/routes/ProtectedRoute";
 
-//Layouts
+// Layouts
 import AppLayout from "@/components/layouts/AppLayout";
-
+import GuestLayout from "@/components/layouts/GuestLayout";
 
 const router = createBrowserRouter([
   // ── Guest routes (redirect to /dashboard if already logged in)
   {
     element: <GuestRoute />,
     children: [
-      { path: "/", element: <HomePage /> },
+      {
+        element: <GuestLayout />,
+        children: [
+          { path: "/", element: <Home /> },
+          { path: "/about", element: <About /> },
+          { path: "/contact", element: <Contact /> },
+        ],
+      },
       { path: "/login", element: <LoginPage /> },
       { path: "/register", element: <RegisterPage /> },
     ],
@@ -34,9 +47,11 @@ const router = createBrowserRouter([
     element: <ProtectedRoute />,
     children: [
       {
-        element: <AppLayout />, // sidebar + topbar wrapper
+        element: <AppLayout />,
         children: [
           { path: "/dashboard", element: <UserDashboard /> },
+          { path: "/posts", element: <PostsPage /> },
+          { path: "/posts/:id", element: <PostDetailPage /> },
           { path: "/profile", element: <ProfilePage /> },
         ],
       },
