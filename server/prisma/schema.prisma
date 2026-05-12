@@ -23,24 +23,67 @@ model User {
   createdAt DateTime @default(now())
   updatedAt DateTime @updatedAt
   posts     Post[]
-  projects  Project[]
+  ownedProjects  Project[]
+  memberships    ProjectMember[]
+  assignedTasks  Task[]          @relation("TaskAssignee")
+  createdTasks   Task[]          @relation("TaskCreator")
 
   @@map("users")
 }
 
 model Project {
-  id          Int      @id @default(autoincrement())
+  id          Int           @id @default(autoincrement())
   title       String
   description String
   ownerId     Int
-  owner       User     @relation(fields: [ownerId], references: [id], onDelete: Cascade)
+  owner       User          @relation(fields: [ownerId], references: [id], onDelete: Cascade)
   status      ProjectStatus @default(ACTIVE)
-  createdAt   DateTime @default(now())
-  updatedAt   DateTime @updatedAt
+  createdAt   DateTime      @default(now())
+  updatedAt   DateTime      @updatedAt
+  members     ProjectMember[]
+  tasks       Task[]
 
   @@index([ownerId])
   @@index([status])
   @@map("projects")
+}
+
+model ProjectMember {
+  id        Int        @id @default(autoincrement())
+  projectId Int
+  userId    Int
+  role      MemberRole @default(MEMBER)
+  joinedAt  DateTime   @default(now())
+  project   Project    @relation(fields: [projectId], references: [id], onDelete: Cascade)
+  user      User       @relation(fields: [userId], references: [id], onDelete: Cascade)
+
+  @@unique([projectId, userId])
+  @@index([projectId])
+  @@index([userId])
+  @@map("project_members")
+}
+
+model Task {
+  id          Int          @id @default(autoincrement())
+  title       String
+  description String?      @db.Text
+  status      TaskStatus   @default(TODO)
+  priority    TaskPriority @default(MEDIUM)
+  deadline    DateTime?
+  projectId   Int
+  assigneeId  Int?
+  creatorId   Int
+  project     Project      @relation(fields: [projectId], references: [id], onDelete: Cascade)
+  assignee    User?        @relation("TaskAssignee", fields: [assigneeId], references: [id], onDelete: SetNull)
+  creator     User         @relation("TaskCreator", fields: [creatorId], references: [id], onDelete: Cascade)
+  createdAt   DateTime     @default(now())
+  updatedAt   DateTime     @updatedAt
+
+  @@index([projectId])
+  @@index([assigneeId])
+  @@index([creatorId])
+  @@index([status])
+  @@map("tasks")
 }
 
 model Post {
@@ -82,4 +125,24 @@ enum PostStatus {
 enum ProjectStatus {
   ACTIVE
   INACTIVE
+}
+
+enum MemberRole {
+  OWNER
+  ADMIN
+  MEMBER
+}
+
+enum TaskStatus {
+  TODO
+  IN_PROGRESS
+  IN_REVIEW
+  DONE
+}
+
+enum TaskPriority {
+  LOW
+  MEDIUM
+  HIGH
+  URGENT
 }
