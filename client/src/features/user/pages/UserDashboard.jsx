@@ -2,20 +2,10 @@ import { useMemo } from "react";
 import { Link } from "react-router-dom";
 import { useAuth } from "@/hooks/useAuth";
 import { useGetAllPostsQuery } from "@/features/post/post.api";
-import StatsCard from "@/features/dashboard/StatsCard";
+import StatsCard from "@/features/dashboard/components/StatsCard";
 import { Button } from "@/components/ui/button";
-import {
-  FileText,
-  CheckCircle,
-  FilePen,
-  CalendarDays,
-  Eye,
-  Pencil,
-  Trash2,
-  Plus,
-  Inbox,
-} from "lucide-react";
-import { cn } from "@/lib/utils";
+import { DASHBOARD_ICONS } from "@/lib/icons/dashboard.icons";
+import { cn, DateFormate } from "@/lib/utils";
 
 const DashboardPage = () => {
   const { user } = useAuth();
@@ -27,10 +17,7 @@ const DashboardPage = () => {
     const published = posts.filter((p) => p.status === "PUBLISHED").length;
     const drafts = posts.filter((p) => p.status === "DRAFT").length;
     const memberSince = user?.createdAt
-      ? new Date(user.createdAt).toLocaleDateString("en-US", {
-          month: "short",
-          year: "numeric",
-        })
+      ? DateFormate(user.createdAt, "long", "en-US")
       : "—";
 
     return { total: posts.length, published, drafts, memberSince };
@@ -50,18 +37,35 @@ const DashboardPage = () => {
 
       {/* ── Stats Row ── */}
       <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4">
-        <StatsCard icon={FileText} label="Total Posts" value={stats.total} />
-        <StatsCard
-          icon={CheckCircle}
-          label="Published"
-          value={stats.published}
-        />
-        <StatsCard icon={FilePen} label="Drafts" value={stats.drafts} />
-        <StatsCard
-          icon={CalendarDays}
-          label="Member Since"
-          value={stats.memberSince}
-        />
+        {[
+          {
+            icon: DASHBOARD_ICONS.FILETEXT,
+            label: "Total Posts",
+            value: stats.total,
+          },
+          {
+            icon: DASHBOARD_ICONS.CHECKCIRCLE,
+            label: "Published",
+            value: stats.published,
+          },
+          {
+            icon: DASHBOARD_ICONS.FILEPEN,
+            label: "Drafts",
+            value: stats.drafts,
+          },
+          {
+            icon: DASHBOARD_ICONS.CALENDARDAYS,
+            label: "Member Since",
+            value: stats.memberSince,
+          },
+        ].map((stat, index) => (
+          <StatsCard
+            key={index}
+            icon={stat.icon}
+            label={stat.label}
+            value={stat.value}
+          />
+        ))}
       </div>
 
       {/* ── Recent Posts ── */}
@@ -82,7 +86,10 @@ const DashboardPage = () => {
           /* Empty state */
           <div className="flex flex-col items-center justify-center py-16 px-6">
             <div className="flex h-16 w-16 items-center justify-center rounded-2xl bg-muted mb-4">
-              <Inbox size={28} className="text-muted-foreground" />
+              <DASHBOARD_ICONS.INBOX
+                size={28}
+                className="text-muted-foreground"
+              />
             </div>
             <h4 className="text-base font-semibold mb-1">No posts yet</h4>
             <p className="text-sm text-muted-foreground mb-4 text-center max-w-xs">
@@ -91,7 +98,7 @@ const DashboardPage = () => {
             </p>
             <Button asChild size="sm" className="rounded-lg">
               <Link to="/posts">
-                <Plus size={16} className="mr-1.5" />
+                <DASHBOARD_ICONS.PLUS size={16} className="mr-1.5" />
                 Create Post
               </Link>
             </Button>
@@ -130,18 +137,14 @@ const DashboardPage = () => {
                           "inline-flex items-center rounded-full px-2.5 py-0.5 text-xs font-medium",
                           post.status === "PUBLISHED"
                             ? "bg-primary/15 text-primary"
-                            : "bg-warning/15 text-warning"
+                            : "bg-warning/15 text-warning",
                         )}
                       >
                         {post.status}
                       </span>
                     </td>
                     <td className="px-5 py-3.5 text-muted-foreground hidden sm:table-cell">
-                      {new Date(post.createdAt).toLocaleDateString("en-US", {
-                        month: "short",
-                        day: "numeric",
-                        year: "numeric",
-                      })}
+                      {DateFormate(post.createdAt, "short", "en-IN")}
                     </td>
                     <td className="px-5 py-3.5">
                       <div className="flex items-center justify-end gap-1">
@@ -152,7 +155,7 @@ const DashboardPage = () => {
                           className="rounded-lg"
                         >
                           <Link to={`/posts/${post.id}`}>
-                            <Eye size={15} />
+                            <DASHBOARD_ICONS.EYE size={15} />
                           </Link>
                         </Button>
                       </div>

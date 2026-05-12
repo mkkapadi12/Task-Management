@@ -26,7 +26,10 @@ import {
   SelectTrigger,
   SelectValue,
 } from "@/components/ui/select";
-import { Loader2, Upload, X } from "lucide-react";
+import { DASHBOARD_ICONS } from "@/lib/icons/dashboard.icons";
+import { ICONS } from "@/lib/icons/icons";
+const { LOADER2: Loader2, UPLOAD: Upload } = DASHBOARD_ICONS;
+const { X } = ICONS;
 
 const PostFormDrawer = ({ open, onOpenChange, editPost = null }) => {
   const isEdit = !!editPost;

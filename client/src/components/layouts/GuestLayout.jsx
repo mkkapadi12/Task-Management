@@ -2,13 +2,14 @@ import { useState } from "react";
 import { Link, NavLink, Outlet, useLocation } from "react-router-dom";
 import { Button } from "@/components/ui/button";
 import { useTheme } from "next-themes";
-import {
-  Sun,
-  Moon,
-  LayoutDashboard,
-  Menu,
-  X,
-} from "lucide-react";
+import { GUEST_ICONS } from "@/lib/icons/guest.icons";
+const {
+  SUN: Sun,
+  MOON: Moon,
+  DASHBOARD: LayoutDashboard,
+  MENU: Menu,
+  CLOSE: X,
+} = GUEST_ICONS;
 
 const NAV_LINKS = [
   { to: "/", label: "Home" },

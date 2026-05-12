@@ -5,7 +5,10 @@ import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Textarea } from "@/components/ui/textarea";
 import { Label } from "@/components/ui/label";
-import { MessageSquare, Send, Loader2 } from "lucide-react";
+import { GUEST_ICONS } from "@/lib/icons/guest.icons";
+import { DASHBOARD_ICONS } from "@/lib/icons/dashboard.icons";
+const { MESSAGE: MessageSquare, SEND: Send } = GUEST_ICONS;
+const { LOADER2: Loader2 } = DASHBOARD_ICONS;
 import { contactSchema } from "@/schemas/contact.schema";
 import { INFO_CARDS } from "@/constant";
 

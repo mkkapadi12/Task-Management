@@ -1,11 +1,12 @@
-import {
-  Target,
-  Heart,
-  Lightbulb,
-  Users,
-  Rocket,
-  ShieldCheck,
-} from "lucide-react";
+import { GUEST_ICONS } from "@/lib/icons/guest.icons";
+const {
+  TARGET: Target,
+  HEART: Heart,
+  LIGHTBULB: Lightbulb,
+  USERS: Users,
+  ROCKET: Rocket,
+  SHIELD_CHECK: ShieldCheck,
+} = GUEST_ICONS;
 
 const VALUES = [
   {
@@ -129,7 +130,7 @@ const About = () => {
           {TEAM.map(({ name, role, initials }, i) => (
             <div
               key={name}
-              className="group flex flex-col items-center rounded-2xl border border-border/50 bg-card/50 backdrop-blur-sm p-6 text-center transition-all duration-500 hover:border-primary/40 hover:-translate-y-1 hover:shadow-xl hover:shadow-primary/5 animate-in fade-in slide-in-from-bottom-8 duration-500 fill-mode-both"
+              className="group flex flex-col items-center rounded-2xl border border-border/50 bg-card/50 backdrop-blur-sm p-6 text-center transition-all hover:border-primary/40 hover:-translate-y-1 hover:shadow-xl hover:shadow-primary/5 animate-in fade-in slide-in-from-bottom-8 duration-500 fill-mode-both"
               style={{ animationDelay: `${i * 100}ms` }}
             >
               {/* Avatar placeholder */}
@@ -165,7 +166,7 @@ const About = () => {
           {VALUES.map(({ icon: Icon, title, description }, i) => (
             <div
               key={title}
-              className="group p-6 rounded-2xl border border-border/50 bg-card/50 backdrop-blur-sm transition-all duration-300 hover:border-primary/40 hover:-translate-y-1 hover:shadow-xl hover:shadow-primary/5 animate-in fade-in slide-in-from-bottom-8 duration-700 fill-mode-both"
+              className="group p-6 rounded-2xl border border-border/50 bg-card/50 backdrop-blur-sm transition-all duration-300 hover:border-primary/40 hover:-translate-y-1 hover:shadow-xl hover:shadow-primary/5 animate-in fade-in slide-in-from-bottom-8 fill-mode-both"
               style={{ animationDelay: `${i * 80}ms` }}
             >
               <div className="h-12 w-12 rounded-2xl bg-primary/10 flex items-center justify-center mb-5 text-primary transition-colors group-hover:bg-primary/20">

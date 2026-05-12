@@ -11,14 +11,15 @@ import {
   SelectTrigger,
   SelectValue,
 } from "@/components/ui/select";
-import {
-  Plus,
-  Search,
-  ChevronLeft,
-  ChevronRight,
-  Inbox,
-  Loader2,
-} from "lucide-react";
+import { DASHBOARD_ICONS } from "@/lib/icons/dashboard.icons";
+const {
+  PLUS: Plus,
+  SEARCH: Search,
+  CHEVRONLEFT: ChevronLeft,
+  CHEVRONRIGHT: ChevronRight,
+  INBOX: Inbox,
+  LOADER2: Loader2,
+} = DASHBOARD_ICONS;
 
 const PostsPage = () => {
   const [page, setPage] = useState(1);

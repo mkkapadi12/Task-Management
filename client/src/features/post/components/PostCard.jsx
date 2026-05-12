@@ -1,6 +1,6 @@
 import { Link } from "react-router-dom";
-import { cn } from "@/lib/utils";
-import { CalendarDays, User } from "lucide-react";
+import { cn, DateFormate } from "@/lib/utils";
+import { DASHBOARD_ICONS } from "@/lib/icons/dashboard.icons";
 
 const PostCard = ({ post }) => {
   const excerpt =
@@ -35,7 +35,7 @@ const PostCard = ({ post }) => {
             "absolute top-3 right-3 inline-flex items-center rounded-full px-2.5 py-0.5 text-xs font-semibold backdrop-blur-sm",
             post.status === "PUBLISHED"
               ? "bg-primary/80 text-primary-foreground"
-              : "bg-warning/80 text-warning-foreground"
+              : "bg-warning/80 text-warning-foreground",
           )}
         >
           {post.status}
@@ -74,19 +74,14 @@ const PostCard = ({ post }) => {
         {/* Footer — author + date */}
         <div className="mt-auto pt-4 flex items-center justify-between text-xs text-muted-foreground border-t border-border/30">
           <div className="flex items-center gap-1.5">
-            <User size={13} />
+            <DASHBOARD_ICONS.USER size={13} />
             <span className="truncate max-w-[100px]">
               {post.author?.name || "Unknown"}
             </span>
           </div>
           <div className="flex items-center gap-1.5">
-            <CalendarDays size={13} />
-            <span>
-              {new Date(post.createdAt).toLocaleDateString("en-US", {
-                month: "short",
-                day: "numeric",
-              })}
-            </span>
+            <DASHBOARD_ICONS.CALENDARDAYS size={13} />
+            <span>{DateFormate(post.createdAt, "long")}</span>
           </div>
         </div>
       </div>

@@ -7,17 +7,10 @@ import {
   useDeletePostMutation,
 } from "@/features/post/post.api";
 import PostFormDrawer from "@/features/post/components/PostFormDrawer";
+import AlertDialog from "@/features/dashboard/components/AlertDialog";
 import { Button } from "@/components/ui/button";
-import { cn } from "@/lib/utils";
-import {
-  ArrowLeft,
-  Pencil,
-  Trash2,
-  CalendarDays,
-  User,
-  Loader2,
-  AlertTriangle,
-} from "lucide-react";
+import { cn, DateFormate } from "@/lib/utils";
+import { DASHBOARD_ICONS } from "@/lib/icons/dashboard.icons";
 
 const PostDetailPage = () => {
   const { id } = useParams();
@@ -31,7 +24,6 @@ const PostDetailPage = () => {
   const isOwner = post && user && post.author?.id === user.id;
 
   const handleDelete = async () => {
-    if (!window.confirm("Are you sure you want to delete this post?")) return;
     try {
       await deletePost(id).unwrap();
       toast.success("Post deleted successfully!");
@@ -44,7 +36,10 @@ const PostDetailPage = () => {
   if (isLoading) {
     return (
       <div className="flex flex-col items-center justify-center py-20 animate-in fade-in duration-300">
-        <Loader2 size={32} className="animate-spin text-primary" />
+        <DASHBOARD_ICONS.LOADER2
+          size={32}
+          className="animate-spin text-primary"
+        />
         <p className="mt-3 text-sm text-muted-foreground">Loading post…</p>
       </div>
     );
@@ -54,7 +49,10 @@ const PostDetailPage = () => {
     return (
       <div className="flex flex-col items-center justify-center py-20 animate-in fade-in duration-300">
         <div className="flex h-16 w-16 items-center justify-center rounded-2xl bg-destructive/10 mb-4">
-          <AlertTriangle size={28} className="text-destructive" />
+          <DASHBOARD_ICONS.ALERTTRIANGLE
+            size={28}
+            className="text-destructive"
+          />
         </div>
         <h3 className="text-base font-semibold mb-1">Post not found</h3>
         <p className="text-sm text-muted-foreground mb-4">
@@ -62,7 +60,7 @@ const PostDetailPage = () => {
         </p>
         <Button asChild variant="outline" size="sm" className="rounded-lg">
           <Link to="/posts">
-            <ArrowLeft size={16} className="mr-1.5" />
+            <DASHBOARD_ICONS.ARROWLEFT size={16} className="mr-1.5" />
             Back to Posts
           </Link>
         </Button>
@@ -73,14 +71,9 @@ const PostDetailPage = () => {
   return (
     <div className="mx-auto max-w-3xl space-y-6 animate-in fade-in slide-in-from-bottom-4 duration-500">
       {/* ── Back link ── */}
-      <Button
-        asChild
-        variant="ghost"
-        size="sm"
-        className="rounded-lg -ml-2"
-      >
+      <Button asChild variant="ghost" size="sm" className="rounded-lg -ml-2">
         <Link to="/posts">
-          <ArrowLeft size={16} className="mr-1.5" />
+          <DASHBOARD_ICONS.ARROWLEFT size={16} className="mr-1.5" />
           Back to Posts
         </Link>
       </Button>
@@ -91,7 +84,7 @@ const PostDetailPage = () => {
           <img
             src={post.coverImage}
             alt={post.title}
-            className="w-full h-64 sm:h-80 object-cover"
+            className="w-full h-72 sm:h-84 object-cover"
           />
         </div>
       )}
@@ -104,7 +97,7 @@ const PostDetailPage = () => {
               "inline-flex items-center rounded-full px-3 py-1 text-xs font-semibold",
               post.status === "PUBLISHED"
                 ? "bg-primary/15 text-primary"
-                : "bg-warning/15 text-warning"
+                : "bg-warning/15 text-warning",
             )}
           >
             {post.status}
@@ -128,18 +121,12 @@ const PostDetailPage = () => {
         {/* Meta info */}
         <div className="flex items-center gap-4 text-sm text-muted-foreground">
           <div className="flex items-center gap-1.5">
-            <User size={15} />
+            <DASHBOARD_ICONS.USER size={15} />
             <span>{post.author?.name || "Unknown"}</span>
           </div>
           <div className="flex items-center gap-1.5">
-            <CalendarDays size={15} />
-            <span>
-              {new Date(post.createdAt).toLocaleDateString("en-US", {
-                month: "long",
-                day: "numeric",
-                year: "numeric",
-              })}
-            </span>
+            <DASHBOARD_ICONS.CALENDARDAYS size={15} />
+            <span>{DateFormate(post.createdAt, "long")}</span>
           </div>
         </div>
 
@@ -152,23 +139,36 @@ const PostDetailPage = () => {
               size="sm"
               className="rounded-lg"
             >
-              <Pencil size={14} className="mr-1.5" />
+              <DASHBOARD_ICONS.PENCIL size={14} className="mr-1.5" />
               Edit
             </Button>
-            <Button
-              onClick={handleDelete}
-              variant="destructive"
-              size="sm"
-              disabled={isDeleting}
-              className="rounded-lg"
-            >
-              {isDeleting ? (
-                <Loader2 size={14} className="mr-1.5 animate-spin" />
-              ) : (
-                <Trash2 size={14} className="mr-1.5" />
-              )}
-              Delete
-            </Button>
+            <AlertDialog
+              title="Are you absolutely sure?"
+              description="This action cannot be undone. This will permanently delete your post and remove its data from our servers."
+              cancelText="Cancel"
+              confirmText="Delete"
+              onConfirm={handleDelete}
+              isDestructive={true}
+              isLoading={isDeleting}
+              trigger={
+                <Button
+                  variant="destructive"
+                  size="sm"
+                  disabled={isDeleting}
+                  className="rounded-lg"
+                >
+                  {isDeleting ? (
+                    <DASHBOARD_ICONS.LOADER2
+                      size={14}
+                      className="mr-1.5 animate-spin"
+                    />
+                  ) : (
+                    <DASHBOARD_ICONS.TRASH2 size={14} className="mr-1.5" />
+                  )}
+                  Delete
+                </Button>
+              }
+            />
           </div>
         )}
       </div>

@@ -6,4 +6,6 @@ const router = Router();
 
 router.get("/profile", protect, getProfile);
 
+// router.post("/profile", protect, updateProfile);
+
 export default router;

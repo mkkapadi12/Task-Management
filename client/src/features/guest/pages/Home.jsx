@@ -1,15 +1,16 @@
 import { Link } from "react-router-dom";
 import { Button } from "@/components/ui/button";
-import {
-  Zap,
-  Shield,
-  CheckCircle,
-  ArrowRight,
-  Users,
-  BarChart3,
-  Clock,
-  Sparkles,
-} from "lucide-react";
+import { GUEST_ICONS } from "@/lib/icons/guest.icons";
+const {
+  ZAP: Zap,
+  SHIELD: Shield,
+  CHECK: CheckCircle,
+  ARROW_RIGHT: ArrowRight,
+  USERS: Users,
+  CHART: BarChart3,
+  CLOCK: Clock,
+  SPARKLES: Sparkles,
+} = GUEST_ICONS;
 import { FEATURES, STATS } from "@/constant";
 
 const Home = () => {
@@ -103,7 +104,7 @@ const Home = () => {
           {FEATURES.map(({ icon: Icon, title, description }, i) => (
             <div
               key={title}
-              className="group relative p-6 rounded-2xl border border-border/50 bg-card/50 backdrop-blur-sm shadow-xl shadow-black/5 transition-all duration-700 hover:border-primary/40 hover:-translate-y-1 hover:shadow-2xl hover:shadow-primary/5 animate-in fade-in slide-in-from-bottom-8 duration-700 fill-mode-both"
+              className="group relative p-6 rounded-2xl border border-border/50 bg-card/50 backdrop-blur-sm shadow-xl shadow-black/5 transition-all hover:border-primary/40 hover:-translate-y-1 hover:shadow-2xl hover:shadow-primary/5 animate-in fade-in slide-in-from-bottom-8 duration-700 fill-mode-both"
               style={{ animationDelay: `${i * 100}ms` }}
             >
               <div className="h-12 w-12 rounded-2xl bg-primary/10 flex items-center justify-center mb-5 text-primary transition-colors group-hover:bg-primary/20">

@@ -4,13 +4,10 @@ import { useAuth } from "@/hooks/useAuth";
 import { useDispatch } from "react-redux";
 import { logout } from "@/features/auth/auth.slice";
 import { Button } from "@/components/ui/button";
-import {
-  Menu,
-  Sun,
-  Moon,
-  LogOut,
-  ChevronDown,
-} from "lucide-react";
+import { GUEST_ICONS } from "@/lib/icons/guest.icons";
+import { DASHBOARD_ICONS } from "@/lib/icons/dashboard.icons";
+const { MENU: Menu, SUN: Sun, MOON: Moon } = GUEST_ICONS;
+const { LOGOUT: LogOut, CHEVRONDOWN: ChevronDown } = DASHBOARD_ICONS;
 import { useState, useRef, useEffect } from "react";
 
 // Map pathname to page title

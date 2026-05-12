@@ -19,11 +19,28 @@ model User {
   password  String
   role      Role     @default(USER)
   avatar    String?
+  publicId  String?
   createdAt DateTime @default(now())
   updatedAt DateTime @updatedAt
   posts     Post[]
+  projects  Project[]
 
   @@map("users")
+}
+
+model Project {
+  id          Int      @id @default(autoincrement())
+  title       String
+  description String
+  ownerId     Int
+  owner       User     @relation(fields: [ownerId], references: [id], onDelete: Cascade)
+  status      ProjectStatus @default(ACTIVE)
+  createdAt   DateTime @default(now())
+  updatedAt   DateTime @updatedAt
+
+  @@index([ownerId])
+  @@index([status])
+  @@map("projects")
 }
 
 model Post {
@@ -60,4 +77,9 @@ enum Role {
 enum PostStatus {
   DRAFT
   PUBLISHED
+}
+
+enum ProjectStatus {
+  ACTIVE
+  INACTIVE
 }
